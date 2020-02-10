@@ -33,7 +33,6 @@ VERSION = 'V1.3.0'
 
 import json,requests
 import configparser
-from pprint import pprint
 from datetime import datetime
 
 def main():
