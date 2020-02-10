@@ -1,3 +1,6 @@
+settings.conf
+nodes.json
+
 ffapi-updater-*.tar.gz
 ffapi-updater.log
 

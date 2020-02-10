@@ -25,27 +25,14 @@
 # and updates the node count and lastchange date (UTC) in APIFILE.
 # The source is a meshviewer's nodes.json in version 2.
 # ------------------------------------------------------------------------------
-# Configuration:
-# - APIFILE is a local file containing your API-File,
-#   file must be writeable for executing user
-# - NODESFILE_REMOTE is a remote source
-#  (https://example.com/meshviewer/nodes.json)
-# - NODESFILE_LOCAL is a local source
-#   and will only be used if NODESFILE_REMOTE is not given (empty string '')
-# - SITE_CODE is the abbreviation of your community, i.e. 'ffwp'
-#  (it has to be given, and could be used as a filter in multi-community setups)
-#
-# Configuration start
-APIFILE = '../api/FreifunkWestpfalz-api.json'
-NODESFILE_LOCAL = '../meshviewer/nodes.json'
-NODESFILE_REMOTE = ''
-SITE_CODE = 'ffwp'
-# Configuration end
+# Configuration: in the settings-example.conf is an example configuratiom.
+#                create for your own config a file called settings.conf
 # ------------------------------------------------------------------------------
 
-VERSION = 'V1.2.0'
+VERSION = 'V1.3.0'
 
 import json,requests
+import configparser
 from pprint import pprint
 from datetime import datetime
 
@@ -57,6 +44,14 @@ def main():
     print("see LICENSE for details.")
     print("Source code available at: https://github.com/Little-Ben/ffapi-updater")
     print("----------------------------------------------------------------------")
+
+    # get configuration from settings.conf
+    config = configparser.ConfigParser()
+    config.read('settings.conf')
+    APIFILE = config['DEFAULT']['APIFILE']
+    NODESFILE_LOCAL = config['DEFAULT']['NODESFILE_LOCAL']
+    NODESFILE_REMOTE = config['DEFAULT']['NODESFILE_REMOTE']
+    SITE_CODE = config['DEFAULT']['SITE_CODE']
 
     with open(APIFILE) as data_file:
         data = json.load(data_file)
