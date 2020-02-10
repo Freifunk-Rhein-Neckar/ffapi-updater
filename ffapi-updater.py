@@ -49,66 +49,67 @@ import json,requests
 from pprint import pprint
 from datetime import datetime
 
-print("\nffapi-updater",VERSION,"Copyright (C) 2016,2019 Benjamin Schmitt")
-print("----------------------------------------------------------------------")
-print("This program comes with ABSOLUTELY NO WARRANTY.")
-print("This is free software, and you are welcome to redistribute it,")
-print("see LICENSE for details.")
-print("Source code available at: https://github.com/Little-Ben/ffapi-updater")
-print("----------------------------------------------------------------------")
+def main():
+    print("\nffapi-updater",VERSION,"Copyright (C) 2016,2019 Benjamin Schmitt")
+    print("----------------------------------------------------------------------")
+    print("This program comes with ABSOLUTELY NO WARRANTY.")
+    print("This is free software, and you are welcome to redistribute it,")
+    print("see LICENSE for details.")
+    print("Source code available at: https://github.com/Little-Ben/ffapi-updater")
+    print("----------------------------------------------------------------------")
 
-with open(APIFILE) as data_file:
-    data = json.load(data_file)
+    with open(APIFILE) as data_file:
+        data = json.load(data_file)
 
-if NODESFILE_REMOTE != "":
-    headers = {
-        'User-Agent': 'ffapi-updater by Little-Ben, ' + VERSION + ', used by: ' + SITE_CODE + ', see: https://github.com/Little-Ben/ffapi-updater'
-    }
+    if NODESFILE_REMOTE != "":
+        headers = {
+            'User-Agent': 'ffapi-updater by Little-Ben, ' + VERSION + ', used by: ' + SITE_CODE + ', see: https://github.com/Little-Ben/ffapi-updater'
+        }
 
-    r = requests.get(NODESFILE_REMOTE, headers=headers)
-    dataNodes = r.json()
-else:
-    with open(NODESFILE_LOCAL) as node_file:
-        dataNodes = json.load(node_file)
+        r = requests.get(NODESFILE_REMOTE, headers=headers)
+        dataNodes = r.json()
+    else:
+        with open(NODESFILE_LOCAL) as node_file:
+            dataNodes = json.load(node_file)
 
-#count data
-iNodeCount=0
-iNodeCountSite=0
-iNodeCountFile=0
-for node in dataNodes["nodes"]:
-    if dataNodes["nodes"][node]["nodeinfo"]["system"].get("site_code","n/a") == SITE_CODE:
-        if dataNodes["nodes"][node]["flags"].get("online",False) == True:
-            iNodeCount = iNodeCount + 1
-        iNodeCountSite = iNodeCountSite + 1
-    iNodeCountFile = iNodeCountFile + 1
+    #count data
+    iNodeCount=0
+    iNodeCountSite=0
+    iNodeCountFile=0
+    for node in dataNodes["nodes"]:
+        if dataNodes["nodes"][node]["nodeinfo"]["system"].get("site_code","n/a") == SITE_CODE:
+            if dataNodes["nodes"][node]["flags"].get("online",False) == True:
+                iNodeCount = iNodeCount + 1
+            iNodeCountSite = iNodeCountSite + 1
+        iNodeCountFile = iNodeCountFile + 1
 
-#data update
-print("UTC time:\t\t\t ", datetime.utcnow().strftime("%Y-%m-%dT%T.%f"))
-iNodeCountOld=data["state"]["nodes"]
-print("node count site/online old:\t ", str(iNodeCountOld))
-data["state"]["nodes"] = iNodeCount
-data["state"]["lastchange"] = datetime.utcnow().strftime("%Y-%m-%dT%T.%f")
-print("node count site/online new:\t ", str(data["state"]["nodes"]))
-print("node count site/all:\t\t ", str(iNodeCountSite))
-print("node count file/all:\t\t ", str(iNodeCountFile))
+    #data update
+    print("UTC time:\t\t\t ", datetime.utcnow().strftime("%Y-%m-%dT%T.%f"))
+    iNodeCountOld=data["state"]["nodes"]
+    print("node count site/online old:\t ", str(iNodeCountOld))
+    data["state"]["nodes"] = iNodeCount
+    data["state"]["lastchange"] = datetime.utcnow().strftime("%Y-%m-%dT%T.%f")
+    print("node count site/online new:\t ", str(data["state"]["nodes"]))
+    print("node count site/all:\t\t ", str(iNodeCountSite))
+    print("node count file/all:\t\t ", str(iNodeCountFile))
 
-if iNodeCountOld != iNodeCount:
-    #write new api file, sorted and prettyprinted - only if node count changed
-    with open(APIFILE, 'w') as outfile:
-        json.dump(data, outfile, sort_keys=True, indent=4, separators=(',', ': '))
-    bApiChanged=True
-else:
-    bApiChanged=False
+    if iNodeCountOld != iNodeCount:
+        #write new api file, sorted and prettyprinted - only if node count changed
+        with open(APIFILE, 'w') as outfile:
+            json.dump(data, outfile, sort_keys=True, indent=4, separators=(',', ': '))
+        bApiChanged=True
+    else:
+        bApiChanged=False
 
-#write end message depending if changes happend
-print("----------------------------------------------------------------------")
-if bApiChanged == True:
-    strEndMessage="API file updated successfully."
-else:
-    strEndMessage="API file unchanged."
-print(strEndMessage, "DONE.\n")
+    #write end message depending if changes happend
+    print("----------------------------------------------------------------------")
+    if bApiChanged == True:
+        strEndMessage="API file updated successfully."
+    else:
+        strEndMessage="API file unchanged."
+    print(strEndMessage, "DONE.\n")
 
-exit(0)
+    exit(0)
 
-
-
+if __name__ ==  "__main__":
+    main()
