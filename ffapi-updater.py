@@ -76,8 +76,8 @@ iNodeCount=0
 iNodeCountSite=0
 iNodeCountFile=0
 for node in dataNodes["nodes"]:
-    if node["nodeinfo"]["system"].get("site_code","n/a") == SITE_CODE:
-        if node["flags"].get("online",False) == True:
+    if dataNodes["nodes"][node]["nodeinfo"]["system"].get("site_code","n/a") == SITE_CODE:
+        if dataNodes["nodes"][node]["flags"].get("online",False) == True:
             iNodeCount = iNodeCount + 1
         iNodeCountSite = iNodeCountSite + 1
     iNodeCountFile = iNodeCountFile + 1
