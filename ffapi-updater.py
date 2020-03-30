@@ -59,9 +59,17 @@ def main():
         headers = {
             'User-Agent': 'ffapi-updater by Little-Ben, ' + VERSION + ', used by: ' + SITE_CODE + ', see: https://github.com/Little-Ben/ffapi-updater'
         }
+        try:
+            r = requests.get(NODESFILE_REMOTE, headers=headers, timeout=5)
+        except requests.exceptions.ReadTimeout:
+            print('Request timed out')
+            return ""
+        except requests.exceptions.ConnectionError:
+            print('ConnectionError')
+            return ""
 
-        r = requests.get(NODESFILE_REMOTE, headers=headers)
         dataNodes = r.json()
+
     else:
         with open(NODESFILE_LOCAL) as node_file:
             dataNodes = json.load(node_file)
