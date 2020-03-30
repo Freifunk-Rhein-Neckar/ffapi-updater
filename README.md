@@ -25,6 +25,8 @@ To use it, simply clone this repository to a folder on your map server, create a
 of the `settings-example.conf` named `settings.conf` and set the settings according 
 to your needs.
 
+Then install the required pip dependencies with: `pip install -r requirements.txt`
+
 Updating your API file should happen on a regularly basis e.g. each 5 min, 
 therefore create a cron job like this: 
 
@@ -34,4 +36,5 @@ therefore create a cron job like this:
 
 ## Dependencies
 - python3
+
 
